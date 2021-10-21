@@ -8,8 +8,37 @@
 import Foundation
 
 struct climaModelo {
-    let condicionID:Int
     let nombreCiudad:String
     let temperaturaCelcius:Double
     let descripcionClima:String
+    let country:String
+    let latitud:Double
+    let longitud:Double
+    let conditionID:Int
+    let weather_icon:String
+    
+    var obtenerCondicionClima:String
+    {
+        switch conditionID {
+        case 800:
+            return "sun.max"
+        case 801...804:
+            return "cloud"
+        case 701...781:
+            return "sun.haze"
+        case 600...622:
+            return "snow"
+        case 500...531:
+            return "cloud.rain"
+        case 300...321:
+            return "cloud.drizzle"
+        case 200...232:
+            return "cloud.bolt"
+        
+        default:
+            return "xmark.icloud"
+        }
+    }
+    
 }
+

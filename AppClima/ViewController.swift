@@ -6,23 +6,39 @@
 //
 
 import UIKit
+import CoreLocation
 
-class ViewController: UIViewController, UITextFieldDelegate {
+class ViewController: UIViewController{
 
     @IBOutlet weak var TF_BuscarCiudad: UITextField!
     @IBOutlet weak var IV_WeatherCondition: UIImageView!
     @IBOutlet weak var LBL_NombreCiudad: UILabel!
     @IBOutlet weak var LBL_Temperatura: UILabel!
     @IBOutlet weak var LBL_Warning: UILabel!
+    @IBOutlet weak var LBL_Country: UILabel!
+    @IBOutlet weak var LBL_DescripcionClima: UILabel!
+    @IBOutlet weak var LBL_Celcius: UILabel!
     
     //MARK:- Creación del objeto "climaManager"
     
-    let clima_manager = climaManager()
+    var clima_manager = climaManager()
+    
+    //Creaciòn del objeto locationManager para el GPS
+    var locationManager:CLLocationManager?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         
+        locationManager = CLLocationManager()
+        
+        locationManager?.delegate = self
+        
+        //Solicitar permiso para el GPS
+        locationManager?.requestWhenInUseAuthorization()
+        locationManager?.requestLocation()
+        
+        clima_manager.delegado = self
         TF_BuscarCiudad.delegate = self
     }
 
@@ -39,6 +55,63 @@ class ViewController: UIViewController, UITextFieldDelegate {
         }
         
     }
+    
+}
+
+//MARK:- Relizar bùsqueda ClimaManagerDelegate con ubicaciòn
+
+extension ViewController:CLLocationManagerDelegate
+{
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        print("Ubicación obtenida")
+        if let ubicacion = locations.last
+        {
+            //Detener la ubicación
+            locationManager?.stopUpdatingLocation()
+            let latitud = ubicacion.coordinate.latitude
+            let longitud = ubicacion.coordinate.longitude
+            
+            print("LAT: \(latitud) LONG: \(longitud)")
+        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        print("Error al obtener la ubicación")
+    }
+}
+
+//MARK:-Relizar búsqueda ClimaManagerDelegate
+
+extension ViewController:ClimaManagerDelegate
+{
+    func actualizarClima(clima: climaModelo) {
+        //print("Temperatura desde el VC: \(clima.temperaturaCelcius)")
+        
+        let temperaturaRounded = Int(clima.temperaturaCelcius.rounded())
+        //print(temperaturaRounded)
+ 
+        DispatchQueue.main.async {
+            self.LBL_Temperatura.text = "\(temperaturaRounded)"
+            self.LBL_Celcius.text = "ºC"
+            self.LBL_NombreCiudad.text = clima.nombreCiudad
+            self.LBL_Country.text = clima.country
+            self.LBL_DescripcionClima.text = clima.descripcionClima.capitalizingFirstLetter()
+            self.IV_WeatherCondition.image = UIImage(systemName: "\(clima.obtenerCondicionClima)")
+        }
+    }
+    
+    func huboError(error: Error) {
+        
+    }
+    
+    
+}
+
+
+//MARK:- Métodos para el TextField
+
+extension ViewController:UITextFieldDelegate
+{
     //MARK:- Asignar acción al botón "Buscar" del teclado virtual
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         
@@ -83,5 +156,18 @@ class ViewController: UIViewController, UITextFieldDelegate {
         }
         
     }
+    
 }
 
+extension String
+{
+    func capitalizingFirstLetter() -> String
+    {
+        return prefix(1).capitalized + dropFirst()
+    }
+    
+    mutating func capitalizeFirstLetter()
+    {
+        self = self.capitalizingFirstLetter()
+    }
+}

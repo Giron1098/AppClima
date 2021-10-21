@@ -9,13 +9,28 @@ import Foundation
 
 struct climaData:Codable {
     let name:String
-    let timezone:Int
     let main:Main
-    //let coord:Coord
-    //let weather:[Weather]
+    let weather:[Weather]
+    let sys:Sys
+    let coord:Coord
+}
+
+struct Coord:Codable {
+    let lat:Double
+    let lon:Double
+}
+
+struct Sys:Codable {
+    let country:String
+}
+
+struct Weather:Codable {
+
+    let id:Int
+    let description:String
+    let icon:String
 }
 
 struct Main:Codable {
     let temp:Double
-    let humidity:Int
 }
