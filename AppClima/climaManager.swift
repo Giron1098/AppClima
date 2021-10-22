@@ -11,22 +11,31 @@ import Foundation
 
 protocol ClimaManagerDelegate {
     func actualizarClima(clima:climaModelo)
-    func huboError(error:Error)
+    func huboError(error:climaModeloError)
 }
 
 struct climaManager {
     
     var delegado:ClimaManagerDelegate?
     
-    let apy_id = "dc499537196483d36222379e13d2e0f2"
+    let api_id = "dc499537196483d36222379e13d2e0f2"
+    
     
     func buscarClima(nombreCiudad: String)
     {
-        let api_url = "https://api.openweathermap.org/data/2.5/weather?q=\(nombreCiudad)&appid=\(apy_id)&units=metric&lang=es"
+        let api_url = "https://api.openweathermap.org/data/2.5/weather?q=\(nombreCiudad)&appid=\(api_id)&units=metric&lang=es"
         
         print("API URL: \(api_url)")
         realizarSolicitud(urlString: api_url)
     
+    }
+    
+    func buscarClimaGPS(latitud:String, longitud:String)
+    {
+        let api_url_gps = "https://api.openweathermap.org/data/2.5/weather?lat=\(latitud)&lon=\(longitud)&appid=\(api_id)&units=metric&lang=es"
+        print("API URL GPS: \(api_url_gps)")
+        realizarSolicitud(urlString: api_url_gps)
+        
     }
     
     func realizarSolicitud(urlString:String)
@@ -42,8 +51,7 @@ struct climaManager {
             let tarea = session.dataTask(with: url){datos, respuesta, error in
                 if error != nil
                 {
-                    print("Error al procesar la petición. Error: \(error?.localizedDescription)")
-                    return
+                    print("Error al relizar solicitud. Error: \(error?.localizedDescription)")
                 } else {
                     if let datosSeguros = datos
                     {
@@ -57,6 +65,11 @@ struct climaManager {
                             delegado?.actualizarClima(clima: objClima)
                         }
                         
+                        if let objClimaError = parseJSON_Error(clima_data_error: datosSeguros)
+                        {
+                            //print("ENTRÓ")
+                            delegado?.huboError(error: objClimaError)
+                        }
                         
                         //parseJSON(clima_data: datosSeguros)
                     }
@@ -66,6 +79,28 @@ struct climaManager {
             
             //4.- Iniciar
             tarea.resume()
+        }
+    }
+    
+    func parseJSON_Error(clima_data_error:Data) -> climaModeloError?
+    {
+        let decoder = JSONDecoder()
+        
+        do
+        {
+            let datosError = try decoder.decode(climaDataError.self, from: clima_data_error)
+            
+            print(datosError.cod)
+            print(datosError.message)
+            
+            
+            let objClimaJSON_Error = climaModeloError(codigoError: datosError.cod, mensajeError: datosError.message)
+            
+            return objClimaJSON_Error
+        } catch {
+            //print("Error al parsear el JSON del Error: \(error.localizedDescription)")
+            return nil
+            
         }
     }
     
@@ -93,7 +128,7 @@ struct climaManager {
             return objClimaJSON
     
     } catch {
-            print("Error: \(error.localizedDescription)")
+            //print("Error al parsear el JSON: \(error.localizedDescription)")
             return nil
         }
     }

@@ -18,6 +18,10 @@ class ViewController: UIViewController{
     @IBOutlet weak var LBL_Country: UILabel!
     @IBOutlet weak var LBL_DescripcionClima: UILabel!
     @IBOutlet weak var LBL_Celcius: UILabel!
+    @IBOutlet weak var IV_FondoClima: UIImageView!
+    
+    var latitud:Double?
+    var longitud:Double?
     
     //MARK:- Creación del objeto "climaManager"
     
@@ -41,19 +45,39 @@ class ViewController: UIViewController{
         clima_manager.delegado = self
         TF_BuscarCiudad.delegate = self
     }
-
-    @IBAction func BTN_A_BuscarCiudad(_ sender: UIButton) {
+    @IBAction func BTN_A_Buscar_por_GPS(_ sender: UIButton) {
         
-        if(TF_BuscarCiudad.text != "")
+        if let lat = latitud
         {
-            //LBL_NombreCiudad.text = TF_BuscarCiudad.text
-            TF_BuscarCiudad.text = ""
-            LBL_Warning.text = ""
-        } else {
-            LBL_Warning.text = "Ingrese el nombre de una ciudad y un país"
-            
+            if let lon = longitud
+            {
+                let lat_gps = "\(lat)"
+                let lon_gps = "\(lon)"
+                print("LAT: \(lat), LONG: \(lon)")
+                
+                clima_manager.buscarClimaGPS(latitud: lat_gps, longitud: lon_gps)
+            }
         }
         
+    }
+    
+    @IBAction func BTN_A_BuscarCiudad(_ sender: UIButton) {
+        
+        if let ciudad = TF_BuscarCiudad.text
+        {
+            clima_manager.buscarClima(nombreCiudad: ciudad)
+            LBL_Warning.text = ""
+            TF_BuscarCiudad.text = ""
+        } else {
+            LBL_Temperatura.text = ""
+            LBL_Celcius.text = ""
+            LBL_NombreCiudad.text = ""
+            LBL_Country.text = ""
+            LBL_DescripcionClima.text = ""
+            IV_WeatherCondition.image = UIImage(systemName:"questionmark.circle")
+            IV_FondoClima.image = UIImage(named: "clima_app2")
+            LBL_Warning.text = "Nada que localizar"
+        }
     }
     
 }
@@ -68,10 +92,12 @@ extension ViewController:CLLocationManagerDelegate
         {
             //Detener la ubicación
             locationManager?.stopUpdatingLocation()
-            let latitud = ubicacion.coordinate.latitude
-            let longitud = ubicacion.coordinate.longitude
+            latitud = ubicacion.coordinate.latitude
+            longitud = ubicacion.coordinate.longitude
             
-            print("LAT: \(latitud) LONG: \(longitud)")
+            //print("LAT: \(latitud) LONG: \(longitud)")
+            
+            
         }
     }
     
@@ -97,11 +123,48 @@ extension ViewController:ClimaManagerDelegate
             self.LBL_Country.text = clima.country
             self.LBL_DescripcionClima.text = clima.descripcionClima.capitalizingFirstLetter()
             self.IV_WeatherCondition.image = UIImage(systemName: "\(clima.obtenerCondicionClima)")
+            self.IV_FondoClima.image = UIImage(named: "\(clima.obtenerCondicionClimaFondo)")
+            self.LBL_Warning.text = ""
         }
     }
     
-    func huboError(error: Error) {
+    func huboError(error: climaModeloError) {
+        let cod_error = "\(error.codigoError)"
         
+        DispatchQueue.main.async {
+            if (cod_error.elementsEqual("404") == true)
+            {
+                self.LBL_Temperatura.text = ""
+                self.LBL_Celcius.text = ""
+                self.LBL_NombreCiudad.text = ""
+                self.LBL_Country.text = ""
+                self.LBL_DescripcionClima.text = ""
+                self.IV_WeatherCondition.image = UIImage(systemName:"questionmark.circle")
+                self.IV_FondoClima.image = UIImage(named: "clima_app2")
+                self.LBL_Warning.text = "Ciudad no encontrada"
+            } else if (cod_error.elementsEqual("401") == true)
+            {
+                self.LBL_Temperatura.text = ""
+                self.LBL_Celcius.text = ""
+                self.LBL_NombreCiudad.text = ""
+                self.LBL_Country.text = ""
+                self.LBL_DescripcionClima.text = ""
+                self.IV_WeatherCondition.image = UIImage(systemName:"questionmark.circle")
+                self.IV_FondoClima.image = UIImage(named: "clima_app2")
+                self.LBL_Warning.text = "API Key inváida"
+            } else if (cod_error.elementsEqual("400") == true)
+            {
+                self.LBL_Temperatura.text = ""
+                self.LBL_Celcius.text = ""
+                self.LBL_NombreCiudad.text = ""
+                self.LBL_Country.text = ""
+                self.LBL_DescripcionClima.text = ""
+                self.IV_WeatherCondition.image = UIImage(systemName:"questionmark.circle")
+                self.IV_FondoClima.image = UIImage(named: "clima_app2")
+                self.LBL_Warning.text = "Nada que localizar"
+                
+            }
+        }
     }
     
     
@@ -123,7 +186,14 @@ extension ViewController:UITextFieldDelegate
             TF_BuscarCiudad.text = ""
             LBL_Warning.text = ""
         } else {
-            LBL_Warning.text = "Ingrese el nombre de una ciudad y un país"
+            LBL_Temperatura.text = ""
+            LBL_Celcius.text = ""
+            LBL_NombreCiudad.text = ""
+            LBL_Country.text = ""
+            LBL_DescripcionClima.text = ""
+            IV_WeatherCondition.image = UIImage(systemName:"questionmark.circle")
+            IV_FondoClima.image = UIImage(named: "clima_app2")
+            LBL_Warning.text = "Nada que localizar"
             
         }
         
@@ -140,7 +210,14 @@ extension ViewController:UITextFieldDelegate
             clima_manager.buscarClima(nombreCiudad: ciudad)
             LBL_Warning.text = ""
         } else {
-            LBL_Warning.text = "Ingrese el nombre de una ciudad y un país"
+            LBL_Temperatura.text = ""
+            LBL_Celcius.text = ""
+            LBL_NombreCiudad.text = ""
+            LBL_Country.text = ""
+            LBL_DescripcionClima.text = ""
+            IV_WeatherCondition.image = UIImage(systemName:"questionmark.circle")
+            IV_FondoClima.image = UIImage(named: "clima_app2")
+            LBL_Warning.text = "Nada que localizar"
         }
     }
     
@@ -150,7 +227,14 @@ extension ViewController:UITextFieldDelegate
             LBL_Warning.text = ""
             return true
         } else {
-            LBL_Warning.text = "Ingrese el nombre de una ciudad y un país"
+            LBL_Temperatura.text = ""
+            LBL_Celcius.text = ""
+            LBL_NombreCiudad.text = ""
+            LBL_Country.text = ""
+            LBL_DescripcionClima.text = ""
+            IV_WeatherCondition.image = UIImage(systemName:"questionmark.circle")
+            IV_FondoClima.image = UIImage(named: "clima_app2")
+            LBL_Warning.text = "Nada que localizar"
             
             return false
         }

@@ -70,6 +70,9 @@
                                 <rect key="frame" x="319" y="43" width="75" height="71"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" backgroundImage="location"/>
+                                <connections>
+                                    <action selector="BTN_A_Buscar_por_GPS:" destination="BYZ-38-t0r" eventType="touchUpInside" id="6Hb-NJ-Frx"/>
+                                </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Consulte su ciudad" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qNu-Qj-akk">
                                 <rect key="frame" x="20" y="663" width="374" height="83"/>
@@ -94,6 +97,7 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="IV_FondoClima" destination="mdJ-cV-4qm" id="wAC-JA-k68"/>
                         <outlet property="IV_WeatherCondition" destination="zhx-3b-QA9" id="HGe-2K-Hk6"/>
                         <outlet property="LBL_Celcius" destination="pXx-Qc-55W" id="s17-N3-jrn"/>
                         <outlet property="LBL_Country" destination="HWe-Z7-w01" id="UI2-bM-Y0a"/>

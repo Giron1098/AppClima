@@ -16,6 +16,8 @@
 		2850AC99271FEB9C00D1FB25 /* climaManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2850AC98271FEB9C00D1FB25 /* climaManager.swift */; };
 		2850AC9C271FFC7300D1FB25 /* climaData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2850AC9B271FFC7300D1FB25 /* climaData.swift */; };
 		2850AC9F272009C500D1FB25 /* climaModelo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2850AC9E272009C500D1FB25 /* climaModelo.swift */; };
+		2850ACC62722802200D1FB25 /* climaDataError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2850ACC52722802200D1FB25 /* climaDataError.swift */; };
+		2850ACC92722809700D1FB25 /* climaModeloError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2850ACC82722809700D1FB25 /* climaModeloError.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +32,8 @@
 		2850AC98271FEB9C00D1FB25 /* climaManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = climaManager.swift; sourceTree = "<group>"; };
 		2850AC9B271FFC7300D1FB25 /* climaData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = climaData.swift; sourceTree = "<group>"; };
 		2850AC9E272009C500D1FB25 /* climaModelo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = climaModelo.swift; sourceTree = "<group>"; };
+		2850ACC52722802200D1FB25 /* climaDataError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = climaDataError.swift; sourceTree = "<group>"; };
+		2850ACC82722809700D1FB25 /* climaModeloError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = climaModeloError.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,6 +76,8 @@
 				2850AC98271FEB9C00D1FB25 /* climaManager.swift */,
 				2850AC9B271FFC7300D1FB25 /* climaData.swift */,
 				2850AC9E272009C500D1FB25 /* climaModelo.swift */,
+				2850ACC52722802200D1FB25 /* climaDataError.swift */,
+				2850ACC82722809700D1FB25 /* climaModeloError.swift */,
 			);
 			path = AppClima;
 			sourceTree = "<group>";
@@ -147,7 +153,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				2850AC88271FD40E00D1FB25 /* ViewController.swift in Sources */,
+				2850ACC92722809700D1FB25 /* climaModeloError.swift in Sources */,
 				2850AC84271FD40E00D1FB25 /* AppDelegate.swift in Sources */,
+				2850ACC62722802200D1FB25 /* climaDataError.swift in Sources */,
 				2850AC9C271FFC7300D1FB25 /* climaData.swift in Sources */,
 				2850AC99271FEB9C00D1FB25 /* climaManager.swift in Sources */,
 				2850AC9F272009C500D1FB25 /* climaModelo.swift in Sources */,
